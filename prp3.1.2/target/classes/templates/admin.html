@@ -80,20 +80,20 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="entry: ${usersWithRoles.entrySet()}">
-                                                <td th:text="${entry.getKey().login}" />
-                                                <td th:text="${entry.getKey().password}" />
-                                                <td th:text="${entry.getKey().email}" />
-                                                <td name="roleIds" th:size="${entry.getKey().role.size()}">
-                                                        <a th:each="role: ${entry.getKey().role} " th:value="${role.id}" th:text="${role.role}"></a>
+                                            <tr th:each="user: ${usersWithRoles.entrySet()}">
+                                                <td th:text="${user.getKey().login}" />
+                                                <td th:text="${user.getKey().password}" />
+                                                <td th:text="${user.getKey().email}" />
+                                                <td name="roleIds" th:size="${user.getKey().role.size()}">
+                                                        <a th:each="role: ${user.getKey().role} " th:value="${role.id}" th:text="${role.role}"></a>
                                                 </td>
                                                 <td>
-                                                    <button th:value="${entry.getKey().id}" type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#modalEdit'+${entry.getKey().id}" name="id">
+                                                    <button th:value="${user.getKey().id}" type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#modalEdit'+${user.getKey().id}" name="id">
                                                         edit
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button th:value="${entry.getKey().id}" type="button" class="btn btn-danger" data-toggle="modal" th:data-target="'#modalDelete'+${entry.getKey().id}" name="id">
+                                                    <button th:value="${user.getKey().id}" type="button" class="btn btn-danger" data-toggle="modal" th:data-target="'#modalDelete'+${user.getKey().id}" name="id">
                                                         delete
                                                     </button>
                                                 </td>
@@ -204,7 +204,7 @@
 </div>
 
 
-<div th:each="entry: ${usersWithRoles}" class="modal fade" th:id="'modalEdit'+${entry.getKey().id}" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel" aria-hidden="true">
+<div th:each="user: ${usersWithRoles}" class="modal fade" th:id="'modalEdit'+${user.getKey().id}" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,24 +217,24 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col">
-                            <form th:action="@{/admin/edit}" method="post" name="id" th:value="${entry.getKey().id}" th:id="'user'+${entry.getKey().id}">
+                            <form th:action="@{/admin/edit}" method="post" name="id" th:value="${user.getKey().id}" th:id="'user'+${user.getKey().id}">
                                 <div class="form-group">
                                     <label for="login">Login</label>
-                                    <input type="text" class="form-control" id="login" name="login" th:value="${entry.getKey().login}">
+                                    <input type="text" class="form-control" id="login" name="login" th:value="${user.getKey().login}">
                                 </div>
                                 <div class="form-group">
                                     <label for="password">password</label>
-                                    <input type="text" class="form-control" id="password" name="password" th:value="${entry.getKey().password}">
+                                    <input type="text" class="form-control" id="password" name="password" th:value="${user.getKey().password}">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">email</label>
-                                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp1" th:value="${entry.getKey().email}">
+                                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp1" th:value="${user.getKey().email}">
                                     <small id="emailHelp1" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="roles">roles</label>
-                                    <select id="roles" class="custom-select" name="roleIds" th:size="${entry.getValue().size()}" multiple>
-                                        <option th:each="role: ${entry.getValue()}" th:value="${role.get(0)}" th:text="${role.get(1)}" th:selected="${role.get(2)}"></option>
+                                    <select id="roles" class="custom-select" name="roleIds" th:size="${user.getValue().size()}" multiple>
+                                        <option th:each="role: ${user.getValue()}" th:value="${role.get(0)}" th:text="${role.get(1)}" th:selected="${role.get(2)}"></option>
                                     </select>
                                 </div>
                             </form>
@@ -244,7 +244,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" name="id" th:value="${entry.getKey().id}" th:form="'user'+${entry.getKey().id}">Save changes</button>
+                <button type="submit" class="btn btn-primary" name="id" th:value="${user.getKey().id}" th:form="'user'+${user.getKey().id}">Save changes</button>
             </div>
         </div>
     </div>
@@ -252,7 +252,7 @@
 
 
 
-<div th:each="entry: ${usersWithRoles}" class="modal fade" th:id="'modalDelete'+${entry.getKey().id}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+<div th:each="user: ${usersWithRoles}" class="modal fade" th:id="'modalDelete'+${user.getKey().id}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -265,24 +265,24 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col">
-                            <form th:action="@{/admin/delete}" method="post" th:id="'userDelete'+${entry.getKey().id}">
+                            <form th:action="@{/admin/delete}" method="post" th:id="'userDelete'+${user.getKey().id}">
                                 <div class="form-group">
                                     <label for="login">Login</label>
-                                    <input type="text" class="form-control" id="login" name="login" th:value="${entry.getKey().login}" disabled>
+                                    <input type="text" class="form-control" id="login" name="login" th:value="${user.getKey().login}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">password</label>
-                                    <input type="text" class="form-control" id="password" name="password" th:value="${entry.getKey().password}" disabled>
+                                    <input type="text" class="form-control" id="password" name="password" th:value="${user.getKey().password}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">email</label>
-                                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp2" th:value="${entry.getKey().email}" disabled>
+                                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp2" th:value="${user.getKey().email}" disabled>
                                     <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="roles">roles</label>
-                                    <select id="roles" class="custom-select" name="roleIds" th:size="${entry.getValue().size()}" disabled>
-                                        <option th:each="role: ${entry.getValue()}" th:value="${role.get(0)}" th:text="${role.get(1)}" th:selected="${role.get(2)}"></option>
+                                    <select id="roles" class="custom-select" name="roleIds" th:size="${user.getValue().size()}" disabled>
+                                        <option th:each="role: ${user.getValue()}" th:value="${role.get(0)}" th:text="${role.get(1)}" th:selected="${role.get(2)}"></option>
                                     </select>
                                 </div>
                             </form>
@@ -292,7 +292,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger" name="id" th:value="${entry.getKey().id}" th:form="'userDelete'+${entry.getKey().id}">Delete</button>
+                <button type="submit" class="btn btn-danger" name="id" th:value="${user.getKey().id}" th:form="'userDelete'+${user.getKey().id}">Delete</button>
             </div>
         </div>
     </div>
