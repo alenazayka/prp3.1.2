@@ -31,21 +31,20 @@ public class UserHibernateDao implements UserDao{
     @Override
     @SuppressWarnings("unchecked")
     public List<User> read() {
-        TypedQuery<User> query= currentSession.createQuery("from User", User.class);
-        return query.getResultList();
+        return currentSession.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Role> readRole() {
-        TypedQuery<Role> query= currentSession.createQuery("from Role", Role.class);
+        TypedQuery<Role> query= currentSession.createQuery("select r from Role r", Role.class);
         return query.getResultList();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Set<Role> getRoles(String[] ids) {
-        TypedQuery<Role> query= currentSession.createQuery("from Role where id = :id", Role.class);
+        TypedQuery<Role> query= currentSession.createQuery("select r from Role r where r.id = :id", Role.class);
         Set<Role> roles = new HashSet<>();
         Arrays.stream(ids).forEach(roleId -> {query.setParameter("id", Long.parseLong(roleId)); roles.add(query.getSingleResult());});
         return roles;
@@ -64,7 +63,7 @@ public class UserHibernateDao implements UserDao{
     @Override
     @SuppressWarnings("unchecked")
     public User read(Long id) {
-        TypedQuery<User> query= currentSession.createQuery("from User where id = :id", User.class);
+        TypedQuery<User> query= currentSession.createQuery("select u from User u where u.id = :id", User.class);
         query.setParameter("id", id);
         return query.getSingleResult();
     }
@@ -77,10 +76,9 @@ public class UserHibernateDao implements UserDao{
     @Override
     @SuppressWarnings("unchecked")
     public UserDetails findByUsername(String login) {
-        TypedQuery<User> query= currentSession.createQuery("from User where login = :login", User.class);
+        TypedQuery<User> query= currentSession.createQuery("select u from User u WHERE u.login= :login", User.class);
         query.setParameter("login", login);
-        User singleResult = query.getSingleResult();
-        return singleResult;
+        return query.getSingleResult();
     }
 
 /*
