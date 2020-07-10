@@ -19,12 +19,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
-        return userDao.read();
+        return userDao.getAllUsers();
     }
 
     @Transactional(readOnly = true)
     public List<Role> getAllRoles() {
-        return userDao.readRole();
+        return userDao.getAllRoles();
     }
 
     @Transactional(readOnly = true)
@@ -34,7 +34,7 @@ public class UserService {
 
     @Transactional
     public void insert(User user) {
-        userDao.insert(user);
+        userDao.add(user);
     }
 
     @Transactional
@@ -44,7 +44,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUser(Long id) {
-        return userDao.read(id);
+        return userDao.getAllUsers(id);
     }
 
     @Transactional

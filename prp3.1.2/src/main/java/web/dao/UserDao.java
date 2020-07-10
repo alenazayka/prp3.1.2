@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserDao {
-    List<User> read();
-    List<Role> readRole();
+    List<User> getAllUsers();
+    List<Role> getAllRoles();
     Set<Role> getRoles(String[] ids);
-    void insert(User user);
+    void add(User user);
     void update(User user);
-    User read(Long id);
+    User getAllUsers(Long id);
     void delete(Long id);
-    public UserDetails findByUsername(String username);
+    public UserDetails getUserByLogin(String username);
 /*
     void deleteAll();
 */

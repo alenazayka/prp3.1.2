@@ -15,34 +15,24 @@ import java.util.Set;
 @Repository
 public class UserHibernateDao implements UserDao{
 
-
-/*
-    private SessionFactory sessionFactory;
-    public UserHibernateDao(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-*/
-    private EntityManager currentSession;
+    private final EntityManager currentSession;
 
     public UserHibernateDao(EntityManager entityManager) {
         this.currentSession = entityManager;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<User> read() {
+    public List<User> getAllUsers() {
         return currentSession.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<Role> readRole() {
+    public List<Role> getAllRoles() {
         TypedQuery<Role> query= currentSession.createQuery("select r from Role r", Role.class);
         return query.getResultList();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Set<Role> getRoles(String[] ids) {
         TypedQuery<Role> query= currentSession.createQuery("select r from Role r where r.id = :id", Role.class);
         Set<Role> roles = new HashSet<>();
@@ -51,7 +41,7 @@ public class UserHibernateDao implements UserDao{
     }
 
     @Override
-    public void insert(User user) {
+    public void add(User user) {
         currentSession.persist(user);
     }
 
@@ -61,8 +51,7 @@ public class UserHibernateDao implements UserDao{
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public User read(Long id) {
+    public User getAllUsers(Long id) {
         TypedQuery<User> query= currentSession.createQuery("select u from User u where u.id = :id", User.class);
         query.setParameter("id", id);
         return query.getSingleResult();
@@ -70,26 +59,15 @@ public class UserHibernateDao implements UserDao{
 
     @Override
     public void delete(Long id) {
-        currentSession.remove(read(id));
+        currentSession.remove(getAllUsers(id));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public UserDetails findByUsername(String login) {
+    public UserDetails getUserByLogin(String login) {
         TypedQuery<User> query= currentSession.createQuery("select u from User u WHERE u.login= :login", User.class);
         query.setParameter("login", login);
         return query.getSingleResult();
     }
 
-/*
-    @Override
-    public void deleteAll() {
-        Session currentSession = sessionFactory.getCurrentSession();
-        List<User> users = currentSession.createQuery("from User").getResultList();
-        for (User user : users) {
-            currentSession.delete(user);
-        }
-    }
-*/
 
 }

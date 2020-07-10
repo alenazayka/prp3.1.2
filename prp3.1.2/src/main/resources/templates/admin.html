@@ -79,27 +79,7 @@
                                                 <th>delete</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr th:each="user: ${usersWithRoles.entrySet()}">
-                                                <td th:text="${user.getKey().login}" />
-                                                <td th:text="${user.getKey().password}" />
-                                                <td th:text="${user.getKey().email}" />
-                                                <td name="roleIds" th:size="${user.getKey().role.size()}">
-                                                        <a th:each="role: ${user.getKey().role} " th:value="${role.id}" th:text="${role.role}"></a>
-                                                </td>
-                                                <td>
-                                                    <button th:value="${user.getKey().id}" type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#modalEdit'+${user.getKey().id}" name="id">
-                                                        edit
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button th:value="${user.getKey().id}" type="button" class="btn btn-danger" data-toggle="modal" th:data-target="'#modalDelete'+${user.getKey().id}" name="id">
-                                                        delete
-                                                    </button>
-                                                </td>
-
-                                            </tr>
-
+                                            <tbody id="users">
                                             </tbody>
                                         </table>
 
@@ -120,18 +100,18 @@
                                     <div class="container m-3">
                                         <div class="row justify-content-center">
                                             <div class="col-4">
-                                                <form th:action="@{/admin/add}" method="post">
+                                                <form>
                                                     <div class="form-group">
-                                                        <label for="login">Login</label>
-                                                        <input type="text" class="form-control" id="login" name="login">
+                                                        <label for="addLogin">Login</label>
+                                                        <input type="text" class="form-control" id="addLogin" name="login">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="password">password</label>
-                                                        <input type="text" class="form-control" id="password" name="password">
+                                                        <label for="addPassword">password</label>
+                                                        <input type="text" class="form-control" id="addPassword" name="password">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="email">email</label>
-                                                        <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+                                                        <label for="addEmail">email</label>
+                                                        <input type="text" class="form-control" id="addEmail" name="email" aria-describedby="emailHelp">
                                                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                                     </div>
                                                     <div class="form-group">
@@ -183,7 +163,7 @@
                                         <td th:text="${user.login}" />
                                         <td th:text="${user.password}" />
                                         <td th:text="${user.email}" />
-                                        <td name="roleIds" th:size="${user.role.size()}" disabled>
+                                        <td name="roleIds" th:size="${user.role.size()}">
                                                 <a th:each="role: ${user.role}" th:value="${role.id}" th:text="${role.role}"></a>
 
                                         </td>
@@ -204,7 +184,7 @@
 </div>
 
 
-<div th:each="user: ${usersWithRoles}" class="modal fade" th:id="'modalEdit'+${user.getKey().id}" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel" aria-hidden="true">
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,24 +197,24 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col">
-                            <form th:action="@{/admin/edit}" method="post" name="id" th:value="${user.getKey().id}" th:id="'user'+${user.getKey().id}">
+                            <form name="id" value="id" id="editModalUser">
                                 <div class="form-group">
-                                    <label for="login">Login</label>
-                                    <input type="text" class="form-control" id="login" name="login" th:value="${user.getKey().login}">
+                                    <label for="editLogin">Login</label>
+                                    <input type="text" class="form-control" id="editLogin" name="login" value="login">
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">password</label>
-                                    <input type="text" class="form-control" id="password" name="password" th:value="${user.getKey().password}">
+                                    <label for="editPassword">password</label>
+                                    <input type="text" class="form-control" id="editPassword" name="password" value="${entry.getKey().password}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">email</label>
-                                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp1" th:value="${user.getKey().email}">
+                                    <label for="editEmail">email</label>
+                                    <input type="text" class="form-control" id="editEmail" name="email" aria-describedby="emailHelp1" value="${entry.getKey().email}">
                                     <small id="emailHelp1" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="roles">roles</label>
-                                    <select id="roles" class="custom-select" name="roleIds" th:size="${user.getValue().size()}" multiple>
-                                        <option th:each="role: ${user.getValue()}" th:value="${role.get(0)}" th:text="${role.get(1)}" th:selected="${role.get(2)}"></option>
+                                    <select id="roles" class="custom-select" name="roleIds" th:size="${roles.size()}" multiple>
+                                        <option th:each="role: ${roles}" th:id="'editRole'+${role.id}" th:value="${role.id}" th:text="${role.role}" name="roleOption"></option>
                                     </select>
                                 </div>
                             </form>
@@ -243,8 +223,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" name="id" th:value="${user.getKey().id}" th:form="'user'+${user.getKey().id}">Save changes</button>
+                <button type="button" class="btn btn-secondary" onclick="editUserUnselectRoles()" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="editUser()" form="editModalUser">Save changes</button>
             </div>
         </div>
     </div>
@@ -252,12 +232,12 @@
 
 
 
-<div th:each="user: ${usersWithRoles}" class="modal fade" th:id="'modalDelete'+${user.getKey().id}" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalDeleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalDeleteLabel">Delete</h5>
-                <button type="button" cslass="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -265,24 +245,24 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col">
-                            <form th:action="@{/admin/delete}" method="post" th:id="'userDelete'+${user.getKey().id}">
+                            <form name="id" value="id" id="deleteModalUser">
                                 <div class="form-group">
-                                    <label for="login">Login</label>
-                                    <input type="text" class="form-control" id="login" name="login" th:value="${user.getKey().login}" disabled>
+                                    <label for="editLogin">Login</label>
+                                    <input type="text" class="form-control" id="deleteLogin" name="login" value="login" disabled>
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">password</label>
-                                    <input type="text" class="form-control" id="password" name="password" th:value="${user.getKey().password}" disabled>
+                                    <label for="editPassword">password</label>
+                                    <input type="text" class="form-control" id="deletePassword" disabled name="password" value="${entry.getKey().password}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">email</label>
-                                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp2" th:value="${user.getKey().email}" disabled>
-                                    <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                    <label for="editEmail">email</label>
+                                    <input type="text" class="form-control" id="deleteEmail" disabled name="email" aria-describedby="emailHelp1" value="${entry.getKey().email}">
+                                    <small id="emailHelp11" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="roles">roles</label>
-                                    <select id="roles" class="custom-select" name="roleIds" th:size="${user.getValue().size()}" disabled>
-                                        <option th:each="role: ${user.getValue()}" th:value="${role.get(0)}" th:text="${role.get(1)}" th:selected="${role.get(2)}"></option>
+                                    <select id="roles1" class="custom-select" name="roleIds" th:size="${roles.size()}" multiple>
+                                        <option th:each="role: ${roles}" th:id="'deleteRole'+${role.id}" th:value="${role.id}" th:text="${role.role}" name="roleOption"></option>
                                     </select>
                                 </div>
                             </form>
@@ -292,17 +272,19 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger" name="id" th:value="${user.getKey().id}" th:form="'userDelete'+${user.getKey().id}">Delete</button>
+                <button type="button" class="btn btn-danger" onclick="deleteUser()" form="deleteModalUser">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="webjars/jquery-ui/1.11.1/jquery-ui.min.js"></script>
+<script src="webjars/popper.js/1.16.0/popper.min.js"></script>
+<script src="webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
+<script src="adminjs.js"></script>
 </body>
 </html>
 
